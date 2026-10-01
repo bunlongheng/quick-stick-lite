@@ -1,0 +1,48 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>Quick Stick</title>
+<link rel="manifest" href="manifest.webmanifest">
+<style>
+*{box-sizing:border-box;margin:0}
+body{position:fixed;inset:0;overflow:hidden;overscroll-behavior:none;background:#000;color:#000}
+#b{display:grid;grid-template-columns:repeat(4,1fr);height:100%}
+.n{display:flex;flex-direction:column;padding:14px 16px;filter:brightness(.7)}
+input,textarea{display:block;width:100%;padding:0;background:none;border:0;outline:0;color:#000;resize:none}
+input::selection,textarea::selection{background:rgba(0,0,0,.22)}
+.t{text-transform:uppercase;font:600 15px/1.3 ui-monospace,Menlo,monospace;padding-bottom:6px;border-bottom:1px solid rgba(0,0,0,.16)}
+.n.e .t{border-color:rgba(0,0,0,.05)}
+.n:focus-within .t{border-color:rgba(0,0,0,.55)}
+.w{position:relative;flex:1;min-height:0;margin-top:8px}
+.m,.a{position:absolute;inset:0;font:14px/1.55 system-ui,-apple-system,sans-serif;white-space:pre-wrap;overflow-wrap:break-word;overflow:auto}
+.m{overflow:hidden;pointer-events:none}
+.a{color:transparent;caret-color:#000;overscroll-behavior:contain}
+.m s{text-decoration:line-through;color:rgba(0,0,0,.35)}
+</style>
+<div id="b"></div>
+<script>
+const C="#FF6B6B #FF8F6B #FFB84D #FFE066 #E8EF7B #6DDC8C #4DD9D2 #6CC4F0 #5EA3FF #8B89E8 #C47EEA #FF6B8A".split(" "),Z="​",K="quick-stick";
+const D=JSON.parse(localStorage[K]||"null")||C.map(()=>({t:"",b:""})),b=document.getElementById("b"),$=(n,s)=>n.querySelector(s);
+b.innerHTML=C.map(c=>`<div class="n" style="background:${c}"><input class="t"><div class="w"><div class="m"></div><textarea class="a"></textarea></div></div>`).join("");
+const N=[...b.children],esc=s=>s.replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"})[c]),save=()=>localStorage[K]=JSON.stringify(D);
+const paint=i=>{const n=N[i],a=$(n,".a"),m=$(n,".m");m.innerHTML=a.value.split("\n").map(l=>l[0]==Z?`<s>${esc(l)}</s>`:esc(l)).join("\n")+"\n";m.scrollTop=a.scrollTop;n.classList.toggle("e",!D[i].t&&!D[i].b)};
+const done=(a,i)=>{
+const L=a.value.split("\n"),s=a.value.slice(0,a.selectionStart).split("\n").length-1,e=a.value.slice(0,a.selectionEnd).split("\n").length-1;
+const idx=L.map((_,k)=>k).slice(s,e+1),at=q=>a.setSelectionRange(q,q);
+if(idx.every(k=>L[k][0]==Z)){idx.forEach(k=>L[k]=L[k].slice(1));a.value=L.join("\n");at(L.slice(0,e+1).join("\n").length)}
+else{
+const mv=idx.filter(k=>L[k][0]!=Z&&L[k]).map(k=>Z+L[k]);
+if(!mv.length)return;
+const rest=L.filter((l,k)=>!(idx.includes(k)&&l[0]!=Z)),up=rest.filter(l=>l[0]!=Z),dn=rest.filter(l=>l[0]==Z);
+while(up.length&&!up[up.length-1])up.pop();
+a.value=[...up,...mv,...dn].join("\n");at([...up,...mv].join("\n").length)}
+D[i].b=a.value;save();paint(i)};
+N.forEach((n,i)=>{const t=$(n,".t"),a=$(n,".a");t.value=D[i].t;a.value=D[i].b;paint(i);
+t.oninput=()=>{D[i].t=t.value;save();paint(i)};
+a.oninput=()=>{D[i].b=a.value;save();paint(i)};
+a.onscroll=()=>$(n,".m").scrollTop=a.scrollTop;
+t.onkeydown=e=>{if(e.key=="Enter"){e.preventDefault();a.focus()}};
+a.onkeydown=e=>{if((e.metaKey||e.ctrlKey)&&e.key=="d"){e.preventDefault();done(a,i)}}});
+const vv=visualViewport,fit=()=>{b.style.height=vv.height+"px";scrollTo(0,0)};
+vv.onresize=vv.onscroll=fit;fit();
+</script>
