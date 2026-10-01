@@ -3,6 +3,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>Quick Stick</title>
 <link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/favicon.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <style>
 *{box-sizing:border-box;margin:0}
 body{position:fixed;inset:0;overflow:hidden;overscroll-behavior:none;background:#000;color:#000}
@@ -10,18 +12,19 @@ body{position:fixed;inset:0;overflow:hidden;overscroll-behavior:none;background:
 .n{display:flex;flex-direction:column;padding:14px 16px;filter:brightness(.7)}
 input,textarea{display:block;width:100%;padding:0;background:none;border:0;outline:0;color:#000;resize:none}
 input::selection,textarea::selection{background:rgba(0,0,0,.22)}
-.t{text-transform:uppercase;font:600 15px/1.3 ui-monospace,Menlo,monospace;padding-bottom:6px;border-bottom:1px solid rgba(0,0,0,.16)}
+.t{text-transform:uppercase;font:600 15px/1.3 ui-sans-serif,system-ui,sans-serif;padding-bottom:6px;border-bottom:1px solid rgba(0,0,0,.16)}
 .n.e .t{border-color:rgba(0,0,0,.05)}
 .n:focus-within .t{border-color:rgba(0,0,0,.55)}
 .w{position:relative;flex:1;min-height:0;margin-top:8px}
-.m,.a{position:absolute;inset:0;font:14px/1.55 system-ui,-apple-system,sans-serif;white-space:pre-wrap;overflow-wrap:break-word;overflow:auto}
+.m,.a{position:absolute;inset:0;font:14px/1.55 ui-sans-serif,system-ui,sans-serif;white-space:pre-wrap;overflow-wrap:break-word;overflow:auto}
 .m{overflow:hidden;pointer-events:none}
 .a{color:transparent;caret-color:#000;overscroll-behavior:contain}
 .m s{text-decoration:line-through;color:rgba(0,0,0,.35)}
 </style>
 <div id="b"></div>
 <script>
-const C="#FF6B6B #FF8F6B #FFB84D #FFE066 #E8EF7B #6DDC8C #4DD9D2 #6CC4F0 #5EA3FF #8B89E8 #C47EEA #FF6B8A".split(" "),Z="​",K="quick-stick";
+const C="#FF6B6B #FF8F6B #FFB84D #FFE066 #E8EF7B #6DDC8C #4DD9D2 #6CC4F0 #5EA3FF #8B89E8 #C47EEA #FF6B8A".split(" "),Z="\u200B",K="quick-stick";
+location.search=="?demo"&&!localStorage[K]&&(localStorage[K]='[{"t":"Groceries","b":"oat milk\\neggs\\nlimes\\n\u200Bcoffee beans"},{"t":"Calls","b":"mom, Sunday\\ndentist about Thursday\\n\u200Bplumber"},{"t":"Ideas","b":"quick stick lite\\nreadme in 15 lines\\nicon with a bolt"},{"t":"Workout","b":"mon run 5k\\nwed pull day\\nfri swim\\n\u200Bsun rest"},{"t":"Errands","b":"drop off dry cleaning\\nreturn the lamp\\n\u200Bpost office"},{"t":"Reading","b":"the mythical man-month\\nworking in public"},{"t":"Home","b":"fix the gate latch\\norder filters\\n\u200Bsmoke alarm battery"},{"t":"Work","b":"review PR #10\\ncut v1.0.7\\n\u200Bmerge the drift fix"},{"t":"Travel","b":"fri 7:40 train\\nhotel conf 88213"},{"t":"Kids","b":"soccer sat 9am\\npermission slip\\n\u200Blibrary books"},{"t":"Money","b":"pay water bill\\nmove 500 to savings"},{"t":"Someday","b":"learn the accordion\\nvisit kyoto in spring"}]');
 const D=JSON.parse(localStorage[K]||"null")||C.map(()=>({t:"",b:""})),b=document.getElementById("b"),$=(n,s)=>n.querySelector(s);
 b.innerHTML=C.map(c=>`<div class="n" style="background:${c}"><input class="t"><div class="w"><div class="m"></div><textarea class="a"></textarea></div></div>`).join("");
 const N=[...b.children],esc=s=>s.replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"})[c]),save=()=>localStorage[K]=JSON.stringify(D);
@@ -45,4 +48,5 @@ t.onkeydown=e=>{if(e.key=="Enter"){e.preventDefault();a.focus()}};
 a.onkeydown=e=>{if((e.metaKey||e.ctrlKey)&&e.key=="d"){e.preventDefault();done(a,i)}}});
 const vv=visualViewport,fit=()=>{b.style.height=vv.height+"px";scrollTo(0,0)};
 vv.onresize=vv.onscroll=fit;fit();
+navigator.serviceWorker&&navigator.serviceWorker.register("sw.js").catch(()=>{});
 </script>
