@@ -2,7 +2,7 @@
 
 A sticky-note grid in 1 file. No build, no framework, no dependencies, no fonts, no server.
 
-![Quick Stick Lite](screenshot.png)
+![Quick Stick Lite](screenshot.png?v=a8cf68d)
 
 - 12 cells in 4 columns, filling the screen. No settings.
 - Each cell: an uppercase title and a plain body, in the same system font as Quick Stick. Enter in the title jumps to the body.
